@@ -1,86 +1,61 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
 public class Install {
-    static String path = "F://Games/";
-    static String [] dirList = {"src", "res", "savegames", "temp"};
-    static String [] srcDirList = {"main", "test"};
-    static String [] resDirList = {"drawables", "vectors", "icons"};
+    static String path = "/home/user/Games/";
+    static String[] dirList = {"src", "res", "savegames", "temp"};
+    static String[] srcDirList = {"main", "test"};
+    static String[] resDirList = {"drawables", "vectors", "icons"};
+    static Date date = new Date();
     static StringBuilder stringBuilder = new StringBuilder();
 
     public static void main(String[] args) {
-        for (String dirName: dirList) {
-            Date date = new Date();
-            File dir1 = new File(path + dirName);
-            switch (dirName){
-                case "src":
-                    if (dir1.mkdir()){
-                        stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
-                        for (String srcDirName: srcDirList){
-                            String fullPath = path + dirName + "/" + srcDirName;
-                            File srcDir = new File(fullPath);
-                            switch (srcDirName){
-                                case "main":
-                                    if (srcDir.mkdir()){
-                                        File main = new File(fullPath, "Main.java");
-                                        File utils = new File(fullPath, "Utils.java");
-                                        try {
-                                            main.createNewFile();
-                                            utils.createNewFile();
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                    }
-                                    break;
-                                case "test":
-                                    srcDir.mkdir();
-                                    break;
-                            }
-                        }
-                    } else {
-                        stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
-                    }
-                    break;
-                case "res":
-                    if (dir1.mkdir()){
-                        stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
-                        for (String resDirName: resDirList){
-                            String fullPath = path + dirName + "/" + resDirName;
-                            File resDir = new File(fullPath);
-                            resDir.mkdir();
-                        }
-                    } else {
-                        stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
-                    }
-                    break;
-                case "savegames":
-                    if (dir1.mkdir()){
-                        stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
-                    } else {
-                        stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
-                    }
-                    break;
-                case "temp":
-                    if (dir1.mkdir()){
-                        File tempFile = new File(path + dirName, "temp.txt");
-                        try {
-                            tempFile.createNewFile();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
-                    } else {
-                        stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
-                    }
-                    break;
-
-
-            }
-            System.out.println(stringBuilder);
+        for (String dirName : dirList) {
+            createDir(path + dirName);
         }
 
+        for (String dirName : srcDirList) {
+            createDir(path + "src/" + dirName);
+        }
+        createFile(path + "src/main", "Main.java");
+        createFile(path + "src/main", "Utils.java");
+        for (String dirName : resDirList) {
+            createDir(path + "res/" + dirName);
+        }
+        createFile(path + "temp", "temp.txt");
+        stringBuilder.append("====================================== \n");
+        writeLog(path + "temp/temp.txt");
+    }
 
+    static void createDir(String dirName) {
+        File dir = new File(dirName);
+        if (dir.mkdir()) {
+            stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
+        } else {
+            stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
+        }
+    }
 
+    static void createFile(String path, String fileName) {
+        File file = new File(path, fileName);
+        try {
+            if (file.createNewFile()) {
+                stringBuilder.append(date + "  Файл " + fileName + " был создан в папке \n");
+            } else {
+                stringBuilder.append(date + "  Файл " + fileName + " не был создан в папке \n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static void writeLog (String fileName){
+        try(FileWriter writer = new FileWriter(fileName, false)) {
+            writer.write(String.valueOf(stringBuilder));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
