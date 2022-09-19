@@ -32,9 +32,9 @@ public class Install {
     static void createDir(String dirName) {
         File dir = new File(dirName);
         if (dir.mkdir()) {
-            stringBuilder.append(date + "  Папка " + dirName + " была создана \n");
+            stringBuilder.append(date).append("  Папка ").append(dirName).append(" была создана \n");
         } else {
-            stringBuilder.append(date + "  Папка " + dirName + " не была создана \n");
+            stringBuilder.append(date).append("  Папка ").append(dirName).append(" не была создана \n");
         }
     }
 
@@ -42,17 +42,17 @@ public class Install {
         File file = new File(path, fileName);
         try {
             if (file.createNewFile()) {
-                stringBuilder.append(date + "  Файл " + fileName + " был создан в папке \n");
+                stringBuilder.append(date).append("  Файл ").append(fileName).append(" был создан в папке \n");
             } else {
-                stringBuilder.append(date + "  Файл " + fileName + " не был создан в папке \n");
+                stringBuilder.append(date).append("  Файл ").append(fileName).append(" не был создан \n");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static void writeLog (String fileName){
-        try(FileWriter writer = new FileWriter(fileName, false)) {
+    static void writeLog(String fileName) {
+        try (FileWriter writer = new FileWriter(fileName, false)) {
             writer.write(String.valueOf(stringBuilder));
         } catch (IOException e) {
             throw new RuntimeException(e);
